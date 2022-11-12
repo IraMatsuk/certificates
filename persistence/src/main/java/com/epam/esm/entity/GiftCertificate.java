@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static com.epam.esm.entity.AuditListener.*;
 
 @Entity
 @Table(name = "gift_certificate")
@@ -51,6 +52,27 @@ public class GiftCertificate implements Serializable {
         this.id = id;
         tags = new LinkedHashSet<>();
     }
+    @PrePersist
+    public void onPrePersist() {
+        createDate = auditDateTime;
+        audit(this, INSERT_OPERATION);
+    }
 
+    /**
+     * On pre update.
+     */
+    @PreUpdate
+    public void onPreUpdate() {
+        lastUpdateDate = auditDateTime;
+        audit(this, UPDATE_OPERATION);
+    }
 
+    /**
+     * On pre remove.
+     */
+    @PreRemove
+    public void onPreRemove() {
+        lastUpdateDate = auditDateTime;
+        audit(this, DELETE_OPERATION);
+    }
 }

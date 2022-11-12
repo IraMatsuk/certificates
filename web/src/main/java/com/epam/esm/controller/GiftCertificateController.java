@@ -29,22 +29,6 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
         this.certificateService = certificateService;
     }
 
-//    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
-//    @ResponseStatus(FOUND)
-//    public CollectionModel<GiftCertificateDto> findAll(@RequestParam("page") int page) {
-//        Set<GiftCertificateDto> certificates = certificateService.findAll(page);
-//        int lastPage = certificateService.getLastPage();
-//        if (!certificates.isEmpty()) {
-//            addLinksToCertificates(certificates);
-//            CollectionModel<GiftCertificateDto> method = methodOn(GiftCertificateController.class).findAll(page);
-//            List<Link> links = addPagesLinks(method, page, lastPage);
-//            return CollectionModel.of(certificates, links);
-//        } else {
-//            throw new NoDataFoundException(CERTIFICATES, GiftCertificateDto.class);
-//        }
-//      //  return CollectionModel.of(certificates);
-//    }
-
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<GiftCertificateDto> findAll(@RequestParam("page") int page,
