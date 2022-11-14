@@ -10,10 +10,13 @@ import com.epam.esm.validation.OnUpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.lang.management.LockInfo;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +26,7 @@ import static com.epam.esm.util.ParameterName.ID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -36,15 +40,30 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
         this.certificateService = certificateService;
     }
 
+//    @GetMapping(produces = APPLICATION_JSON_VALUE)
+//    @ResponseStatus(FOUND)
+//    public CollectionModel<GiftCertificateDto> findAll(@RequestParam("page") int page,
+//                                                       @RequestParam("size") int size) {
+//        Set<GiftCertificateDto> certificates = certificateService.findAll(page, size);
+//        int lastPage = certificateService.getLastPage();
+//        if (!certificates.isEmpty()) {
+//            addLinksToCertificates(certificates);
+//            CollectionModel<GiftCertificateDto> method = methodOn(GiftCertificateController.class).findAll(page, size);
+//            List<Link> links = addPagesLinks(method, page, lastPage);
+//            return CollectionModel.of(certificates, links);
+//        } else {
+//            throw new NoDataFoundException(CERTIFICATES, GiftCertificateDto.class);
+//        }
+//    }
+
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
-    public CollectionModel<GiftCertificateDto> findAll(@RequestParam("page") int page,
-                                                       @RequestParam("size") int size) {
-        Set<GiftCertificateDto> certificates = certificateService.findAll(page, size);
+    public CollectionModel<GiftCertificateDto> findAllCertificates(@RequestParam("page") int page) {
+        Set<GiftCertificateDto> certificates = certificateService.findAll(page);
         int lastPage = certificateService.getLastPage();
         if (!certificates.isEmpty()) {
             addLinksToCertificates(certificates);
-            CollectionModel<GiftCertificateDto> method = methodOn(GiftCertificateController.class).findAll(page, size);
+            CollectionModel<GiftCertificateDto> method = methodOn(GiftCertificateController.class).findAllCertificates(page);
             List<Link> links = addPagesLinks(method, page, lastPage);
             return CollectionModel.of(certificates, links);
         } else {
@@ -69,13 +88,26 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
     @Validated(OnCreateGroup.class)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public GiftCertificate create(@RequestBody GiftCertificateDto giftCertificateDto) {
+    public ResponseEntity<GiftCertificate> create(@RequestBody GiftCertificateDto giftCertificateDto) {
         GiftCertificate newCertificate = certificateService.create(giftCertificateDto);
         if (newCertificate == null) {
             throw new BadRequestException(GiftCertificateDto.class);
         }
-        return newCertificate;
+        return ResponseEntity.ok(newCertificate);
     }
+
+
+    @Validated(OnUpdateGroup.class)
+    @PutMapping(consumes = APPLICATION_JSON_VALUE)
+    @ResponseStatus(OK)
+    public GiftCertificate update(@RequestBody GiftCertificateDto giftCertificateDto) {
+        GiftCertificate updatedCertificate = certificateService.update(giftCertificateDto);
+        if (updatedCertificate == null) {
+            throw new BadRequestException(GiftCertificateDto.class);
+        }
+        return updatedCertificate;
+    }
+
 
     private void addLinksToCertificates(Set<GiftCertificateDto> certificates) {
         certificates.forEach(c -> {

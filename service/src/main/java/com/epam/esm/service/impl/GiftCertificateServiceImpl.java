@@ -9,13 +9,12 @@ import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +24,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagRepository tagRepository;
     private final GiftCertificateMapper giftCertificateMapper;
+    @Value("5")
     private int maxResultAmount;
     private int lastPage;
 
@@ -36,21 +36,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.giftCertificateMapper = giftCertificateMapper;
     }
 
-//    @Override
-//    public Set<GiftCertificateDto> findAll(int page) {
-//        Pageable pageable = PageRequest.of(page, maxResultAmount);
-//        Set<GiftCertificate> giftCertificates = giftCertificateRepository.findAll(pageable).toSet();
-//        lastPage = giftCertificateRepository.findAll(pageable).getTotalPages();
-//        return giftCertificates.stream()
-//                .map(giftCertificateMapper::mapToDto)
-//                .collect(Collectors.toSet());
-//    }
-
     @Override
-    public Set<GiftCertificateDto> findAll(int page, int size) {
-        List<GiftCertificate> giftCertificates = giftCertificateRepository.findAll();
-        return giftCertificates.
-                stream()
+    public Set<GiftCertificateDto> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, maxResultAmount);
+        Set<GiftCertificate> giftCertificates = giftCertificateRepository.findAll(pageable).toSet();
+        lastPage = giftCertificateRepository.findAll(pageable).getTotalPages();
+        return giftCertificates.stream()
                 .map(giftCertificateMapper::mapToDto)
                 .collect(Collectors.toSet());
     }
@@ -78,7 +69,33 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    @Transactional
+    public GiftCertificate update(GiftCertificateDto giftCertificateDto) {
+        Optional<GiftCertificate> updatedCertificate = giftCertificateRepository.findById(giftCertificateDto.getId());
+        if (!updatedCertificate.isPresent()) {
+            throw new IllegalArgumentException("Not valid"); // TODO
+        }
+        updateData(updatedCertificate.get(), giftCertificateDto);
+        return updatedCertificate.get();
+    }
+
+    @Override
     public int getLastPage() {
         return lastPage;
+    }
+
+    private void updateData(GiftCertificate giftCertificate, GiftCertificateDto certificateDto) {
+        if (certificateDto.getName() != null && !giftCertificate.getName().equals(certificateDto.getName())) {
+            giftCertificate.setName(certificateDto.getName());
+        }
+        if (certificateDto.getDescription() != null && !giftCertificate.getDescription().equals(certificateDto.getDescription())) {
+            giftCertificate.setDescription(certificateDto.getDescription());
+        }
+        if (certificateDto.getPrice() != null && !giftCertificate.getPrice().equals(certificateDto.getPrice())) {
+            giftCertificate.setPrice(certificateDto.getPrice());
+        }
+        if (certificateDto.getDuration() > 0 && giftCertificate.getDuration() != certificateDto.getDuration()) {
+            giftCertificate.setDuration(certificateDto.getDuration());
+        }
     }
 }

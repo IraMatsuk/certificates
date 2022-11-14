@@ -55,8 +55,8 @@ public class GiftCertificate implements Serializable {
 
     @PrePersist
     public void onPrePersist() {
-        createDate = auditDateTime;
         audit(this, INSERT_OPERATION);
+        createDate = auditDateTime;
     }
 
     /**
@@ -64,8 +64,8 @@ public class GiftCertificate implements Serializable {
      */
     @PreUpdate
     public void onPreUpdate() {
-        lastUpdateDate = auditDateTime;
         audit(this, UPDATE_OPERATION);
+        lastUpdateDate = auditDateTime;
     }
 
     /**
@@ -73,7 +73,7 @@ public class GiftCertificate implements Serializable {
      */
     @PreRemove
     public void onPreRemove() {
-        lastUpdateDate = auditDateTime;
         audit(this, DELETE_OPERATION);
+        lastUpdateDate = auditDateTime;
     }
 }

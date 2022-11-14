@@ -1,6 +1,7 @@
 package com.epam.esm.exception;
 
-import static com.epam.esm.util.ParameterName.*;
+import static com.epam.esm.util.ParameterName.CERTIFICATES;
+import static com.epam.esm.util.ParameterName.TAGS;
 
 public class NoDataFoundException extends RuntimeException {
     private static final String DELIMITER = " = ";
