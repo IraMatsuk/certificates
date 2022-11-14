@@ -17,7 +17,7 @@ public class TagDto extends RepresentationModel<TagDto> {
 
     private Long id;
 
-    @Pattern(regexp = "[A-Za-z\\p{Alnum}]{1,30}")
+    @Pattern(regexp = "[\\w\\p{Blank}A-Z]{3,50}")
     private String name;
 
     /**

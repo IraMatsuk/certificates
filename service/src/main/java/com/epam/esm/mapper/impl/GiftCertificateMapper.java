@@ -41,7 +41,10 @@ public class GiftCertificateMapper implements Mapper<GiftCertificate, GiftCertif
     @Override
     public GiftCertificate mapToEntity(GiftCertificateDto certificateDto) {
         GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(certificateDto.getId());
+        var id = certificateDto.getId();
+        if (id != null) {
+            giftCertificate.setId(id);
+        }
         giftCertificate.setName(certificateDto.getName());
         giftCertificate.setDescription(certificateDto.getDescription());
         giftCertificate.setDuration(certificateDto.getDuration());

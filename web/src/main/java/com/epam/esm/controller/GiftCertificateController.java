@@ -1,12 +1,18 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.validation.OnCreateGroup;
+import com.epam.esm.validation.OnUpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +22,7 @@ import static com.epam.esm.util.ParameterName.CERTIFICATES;
 import static com.epam.esm.util.ParameterName.ID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -56,6 +63,18 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
         } else {
             throw new NoDataFoundException(ID, id, GiftCertificateDto.class);
         }
+    }
+
+
+    @Validated(OnCreateGroup.class)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @ResponseStatus(CREATED)
+    public GiftCertificate create(@RequestBody GiftCertificateDto giftCertificateDto) {
+        GiftCertificate newCertificate = certificateService.create(giftCertificateDto);
+        if (newCertificate == null) {
+            throw new BadRequestException(GiftCertificateDto.class);
+        }
+        return newCertificate;
     }
 
     private void addLinksToCertificates(Set<GiftCertificateDto> certificates) {

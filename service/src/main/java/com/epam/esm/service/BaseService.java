@@ -1,12 +1,13 @@
 package com.epam.esm.service;
 
-import java.util.List;
+import com.epam.esm.entity.GiftCertificate;
+
 import java.util.Optional;
 import java.util.Set;
 
 public interface BaseService<T> {
-  //  Set<T> findAll(int page);
     Set<T> findAll(int page, int size);
     Optional<T> findById(long id);
+    GiftCertificate create(T t);
     int getLastPage();
 }

@@ -18,7 +18,10 @@ public class TagMapper implements Mapper<Tag, TagDto> {
     @Override
     public Tag mapToEntity(TagDto tagDto) {
         Tag tag = new Tag();
-        tag.setId(tagDto.getId());
+        var id = tagDto.getId();
+        if (id != null) {
+            tag.setId(id);
+        }
         tag.setName(tagDto.getName());
         return tag;
     }

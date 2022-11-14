@@ -26,25 +26,25 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     @Min(value = 1, groups = {OnAggregationCreateGroup.class, OnUpdateGroup.class})
     private Long id;
 
-    @Pattern(regexp = "[A-Za-z\\p{Alnum}]{3,30}", groups = {OnCreateGroup.class, OnUpdateGroup.class})
+    @Pattern(regexp = "[\\w\\p{Blank}A-Z]{3,100}", groups = {OnCreateGroup.class, OnUpdateGroup.class})
     private String name;
 
-    @Pattern(regexp = "[A-Za-z\\p{Alnum}]{3,300}", groups = {OnCreateGroup.class, OnUpdateGroup.class})
+    @Pattern(regexp = "[\\w\\p{Blank}A-Z]{3,300}", groups = {OnCreateGroup.class, OnUpdateGroup.class})
     private String description;
 
     @NotNull(groups = OnCreateGroup.class)
     @DecimalMin(value = "0.0")
+    @DecimalMax(value = "999999.99")
     private BigDecimal price;
 
     @Min(value = 1, groups = OnCreateGroup.class)
     @Min(value = 0, groups = {OnUpdateGroup.class, OnSearchGroup.class})
+    @Max(value = 365)
     private int duration;
 
-    @Null
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createDate;
 
-    @Null
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime lastUpdateDate;
 

@@ -27,10 +27,10 @@ public class GiftCertificate implements Serializable {
     private BigDecimal price;
     private int duration;
 
-    @Column(name = "create_date", insertable = false)
+    @Column(name = "create_date")
     private LocalDateTime createDate;
 
-    @Column(name = "last_update_date", insertable = false)
+    @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -52,6 +52,7 @@ public class GiftCertificate implements Serializable {
         this.id = id;
         tags = new LinkedHashSet<>();
     }
+
     @PrePersist
     public void onPrePersist() {
         createDate = auditDateTime;

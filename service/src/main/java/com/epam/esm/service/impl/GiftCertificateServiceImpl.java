@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.impl.GiftCertificateMapper;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -61,6 +64,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    @Transactional
+    public GiftCertificate create(GiftCertificateDto giftCertificateDto) {
+        GiftCertificate createdCertificate = giftCertificateMapper.mapToEntity(giftCertificateDto);
+        createdCertificate.getTags().forEach(t -> {
+            Optional<Tag> tag = tagRepository.findByName(t.getName());
+            tag.ifPresent(value -> t.setId(value.getId()));
+        });
+        return giftCertificateRepository.save(createdCertificate);
     }
 
     @Override
