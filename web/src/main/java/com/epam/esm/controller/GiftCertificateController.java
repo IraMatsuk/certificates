@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.constraints.Min;
 import java.lang.management.LockInfo;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,9 +26,7 @@ import static com.epam.esm.util.ParameterName.CERTIFICATES;
 import static com.epam.esm.util.ParameterName.ID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.FOUND;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -90,6 +89,15 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
             throw new BadRequestException(GiftCertificateDto.class);
         }
         return updatedCertificate;
+    }
+    
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        boolean isDeleted = certificateService.delete(id);
+        if (!isDeleted) {
+            throw new NoDataFoundException(ID, id, GiftCertificateDto.class);
+        }
     }
 
 

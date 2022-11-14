@@ -47,7 +47,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Optional<GiftCertificateDto> findById(long id) {
+    public Optional<GiftCertificateDto> findById(Long id) {
         Optional<GiftCertificate> certificate = giftCertificateRepository.findById(id);
         if (certificate.isPresent()) {
             GiftCertificateDto giftCertificate = giftCertificateMapper.mapToDto(certificate.get());
@@ -77,6 +77,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         updateData(updatedCertificate.get(), giftCertificateDto);
         return updatedCertificate.get();
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        boolean exists = giftCertificateRepository.existsById(id);
+        if (exists) {
+            giftCertificateRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
