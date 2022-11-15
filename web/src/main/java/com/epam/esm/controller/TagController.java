@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
@@ -20,8 +21,7 @@ import static com.epam.esm.util.ParameterName.TAGS;
 import static com.epam.esm.util.ParameterName.ID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.FOUND;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
@@ -70,6 +70,15 @@ public class TagController extends AbstractController<TagDto> {
             tagDto.get().add(link);
             return tagDto.get();
         } else {
+            throw new NoDataFoundException(ID, id, TagDto.class);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        boolean isDeleted = tagService.delete(id);
+        if (!isDeleted) {
             throw new NoDataFoundException(ID, id, TagDto.class);
         }
     }
