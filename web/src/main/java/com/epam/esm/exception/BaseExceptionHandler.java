@@ -43,9 +43,9 @@ public class BaseExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(NoDataFoundException.class)
-    public ResponseEntity<ResponseErrorEntity> dataNotFound(NoDataFoundException exception) {
-        return new ResponseEntity<>(new ResponseErrorEntity(NO_CONTENT.value(), exception.getResourceClass(),
-                NO_DATA_FOUND_MESSAGE + exception.getParameters() + CLOSING_BRACE), NO_CONTENT);
+    public ResponseEntity<ResponseErrorEntity> dataNotFound(NoDataFoundException exception) { // TODO, when certificate was not found return
+        return new ResponseEntity<>(new ResponseErrorEntity(NOT_FOUND.value(), exception.getResourceClass(),
+                NO_DATA_FOUND_MESSAGE + exception.getParameters() + CLOSING_BRACE), NOT_FOUND);
     }
 
     /**
