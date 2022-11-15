@@ -63,18 +63,15 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
         }
     }
 
-
     @Validated(OnCreateGroup.class)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    @ResponseStatus(CREATED)
-    public ResponseEntity<GiftCertificate> create(@RequestBody GiftCertificateDto giftCertificateDto) {
-        GiftCertificate newCertificate = certificateService.create(giftCertificateDto);
+    public ResponseEntity<GiftCertificateDto> createCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
+        GiftCertificateDto newCertificate = certificateService.create(giftCertificateDto);
         if (newCertificate == null) {
             throw new BadRequestException(GiftCertificateDto.class);
         }
-        return ResponseEntity.ok(newCertificate);
+        return new ResponseEntity<>(newCertificate, CREATED);
     }
-
 
     @Validated(OnUpdateGroup.class)
     @PutMapping(consumes = APPLICATION_JSON_VALUE)

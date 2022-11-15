@@ -56,16 +56,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             return Optional.empty();
         }
     }
-
+    
     @Override
     @Transactional
-    public GiftCertificate create(GiftCertificateDto giftCertificateDto) {
-        GiftCertificate createdCertificate = giftCertificateMapper.mapToEntity(giftCertificateDto);
-        createdCertificate.getTags().forEach(t -> {
+    public GiftCertificateDto create(GiftCertificateDto giftCertificateDto) {
+        GiftCertificate certificate = giftCertificateMapper.mapToEntity(giftCertificateDto);
+        certificate.getTags().forEach(t -> {
             Optional<Tag> tag = tagRepository.findByName(t.getName());
             tag.ifPresent(value -> t.setId(value.getId()));
         });
-        return giftCertificateRepository.save(createdCertificate);
+        GiftCertificate createdCertificate = giftCertificateRepository.save(certificate);
+        return giftCertificateMapper.mapToDto(createdCertificate);
     }
 
     @Override
