@@ -56,7 +56,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             return Optional.empty();
         }
     }
-    
+
     @Override
     @Transactional
     public GiftCertificateDto create(GiftCertificateDto giftCertificateDto) {
