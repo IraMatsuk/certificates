@@ -12,13 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.epam.esm.util.ParameterName.TAGS;
-import static com.epam.esm.util.ParameterName.ID;
+import static com.epam.esm.util.ParameterName.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.HttpStatus.*;
@@ -80,6 +81,21 @@ public class TagController extends AbstractController<TagDto> {
         boolean isDeleted = tagService.delete(id);
         if (!isDeleted) {
             throw new NoDataFoundException(ID, id, TagDto.class);
+        }
+    }
+
+    @GetMapping(params = "name", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(FOUND)
+    public TagDto getByName(@RequestParam @NotNull
+                                 @Pattern(regexp = "[\\w\\p{Blank}A-Z]{3,50}")
+                                        String name) {
+        Optional<TagDto> tag = tagService.findByName(name);
+        if (tag.isPresent()) {
+            Link link = linkTo(methodOn(TagController.class).getByName(name)).withSelfRel();
+            tag.get().add(link);
+            return tag.get();
+        } else {
+            throw new NoDataFoundException(NAME, name, TagDto.class);
         }
     }
 
