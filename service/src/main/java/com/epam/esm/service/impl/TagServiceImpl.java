@@ -6,31 +6,50 @@ import com.epam.esm.mapper.impl.TagMapper;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
+    @Value("5")
+    private int maxResultAmount;
+    private int lastPage;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, TagMapper tagMapper) {
+    public TagServiceImpl(TagRepository tagRepository, @Qualifier("tagServiceMapper") TagMapper tagMapper) {
         this.tagRepository = tagRepository;
         this.tagMapper = tagMapper;
     }
 
     @Override
     public Set<TagDto> findAll(int page) {
-        return null;
+        Pageable pageable = PageRequest.of(page, maxResultAmount);
+        Set<Tag> tagSet = tagRepository.findAll(pageable).toSet();
+        lastPage = tagRepository.findAll(pageable).getTotalPages();
+        return tagSet.stream()
+                .map(tagMapper::mapToDto)
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Optional<TagDto> findById(Long id) {
-        return Optional.empty();
+        Optional<Tag> tag = tagRepository.findById(id);
+        if (tag.isPresent()) {
+            TagDto tagDto = tagMapper.mapToDto(tag.get());
+            return Optional.of(tagDto);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -52,11 +71,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int getLastPage() {
-        return 0;
-    }
-
-    @Override
     public Optional<TagDto> findByName(String name) {
         Optional<Tag> tag = tagRepository.findByName(name);
         if (tag.isPresent()) {
@@ -65,5 +79,10 @@ public class TagServiceImpl implements TagService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public int getLastPage() {
+        return lastPage;
     }
 }
