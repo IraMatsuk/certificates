@@ -7,6 +7,8 @@ import lombok.experimental.Tolerate;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static com.epam.esm.entity.AuditListener.*;
 
@@ -20,17 +22,24 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private long id;
+
+    @Column(name = "cost")
+    private BigDecimal cost;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    private BigDecimal cost;
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
+
+    @OneToMany
+    private Set<GiftCertificate> certificates;
 
     @Tolerate
     public Order() {
         user = new User();
-
+        certificates = new LinkedHashSet<>();
     }
 
     @PrePersist()
