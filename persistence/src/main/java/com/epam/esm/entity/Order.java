@@ -35,13 +35,14 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<GiftCertificate> certificates;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "gift_certificate_id")
+    private GiftCertificate certificate;
 
     @Tolerate
     public Order() {
         user = new User();
-        certificates = new LinkedHashSet<>();
+        certificate = new GiftCertificate();
     }
 
     @PrePersist()

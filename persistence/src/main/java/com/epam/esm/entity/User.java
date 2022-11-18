@@ -18,11 +18,8 @@ public class User {
     @Column(name = "user_id")
     private long id;
 
-    @Column(name = "surname")
-    private String surname;
-
-    @Column(name = "name")
-    private String name;
+    @Column(name = "username")
+    private String userName;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
