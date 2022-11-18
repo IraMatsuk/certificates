@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         User newUser = userRepository.save(user);
         return userMapper.mapToDto(newUser);
     }
-    
+
     @Override
     public Optional<UserDto> findByUserName(String name) {
         Optional<User> user = userRepository.findByUserName(name);
