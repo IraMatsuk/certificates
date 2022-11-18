@@ -3,7 +3,6 @@ package com.epam.esm.dto;
 import com.epam.esm.validation.OnAggregationCreateGroup;
 import com.epam.esm.validation.OnCreateGroup;
 import com.epam.esm.validation.OnUpdateGroup;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,12 +1,10 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.UserService;
 import com.epam.esm.validation.OnCreateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -30,14 +28,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/orders")
 public class OrderController extends AbstractController<OrderDto> {
     private final OrderService orderService;
-    private final UserService userService;
 
     @Autowired
-    public OrderController(OrderService orderService, UserService userService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.userService = userService;
     }
-
 
     @Validated(OnCreateGroup.class)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
@@ -76,7 +71,6 @@ public class OrderController extends AbstractController<OrderDto> {
             throw new NoDataFoundException(ID, id, OrderDto.class);
         }
     }
-
 
     private void addLinks(Set<OrderDto> orders) {
         orders.forEach(c -> {

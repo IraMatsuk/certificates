@@ -1,8 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.User;
 import com.epam.esm.mapper.impl.UserMapper;
 import com.epam.esm.repository.UserRepository;
@@ -44,8 +42,7 @@ public class UserServiceImpl implements UserService {
         User newUser = userRepository.save(user);
         return userMapper.mapToDto(newUser);
     }
-
-
+    
     @Override
     public Optional<UserDto> findByUserName(String name) {
         Optional<User> user = userRepository.findByUserName(name);
@@ -56,7 +53,6 @@ public class UserServiceImpl implements UserService {
             return Optional.empty();
         }
     }
-
 
     @Override
     public Set<UserDto> findAll(int page) {
@@ -86,6 +82,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getLastPage() {
-        return 0;
+        return lastPage;
     }
 }

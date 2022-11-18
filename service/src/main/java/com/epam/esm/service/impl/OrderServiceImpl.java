@@ -1,14 +1,11 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
-import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.mapper.impl.OrderMapper;
-import com.epam.esm.mapper.impl.UserMapper;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,7 +29,6 @@ public class OrderServiceImpl implements OrderService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
-    private final UserMapper userMapper;
     @Value("5")
     private int maxResultAmount;
     private int lastPage;
@@ -41,13 +36,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderServiceImpl(OrderRepository orderRepository,
                             GiftCertificateRepository giftCertificateRepository,
                             UserRepository userRepository,
-                            @Qualifier("orderServiceMapper") OrderMapper orderMapper,
-                            @Qualifier("userServiceMapper") UserMapper userMapper) {
+                            @Qualifier("orderServiceMapper") OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.giftCertificateRepository = giftCertificateRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
-        this.userMapper = userMapper;
     }
 
     @Override
@@ -55,13 +48,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto create(OrderDto orderDto) {
         Order order = new Order();
 
-        // Get User
         Optional<User> user = userRepository.findById(orderDto.getUserId());
         if (!user.isPresent()) {
             throw new NoDataFoundException(ID, orderDto.getUserId(), OrderDto.class);
         }
 
-        // Get Certificate
         Optional<GiftCertificate> certificate = giftCertificateRepository.findById(orderDto.getCertificateId());
         if (!certificate.isPresent()) {
             throw new NoDataFoundException(ID, orderDto.getCertificateId(), OrderDto.class);
@@ -82,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int getLastPage() {
-        return 0;
+        return lastPage;
     }
 
     @Override

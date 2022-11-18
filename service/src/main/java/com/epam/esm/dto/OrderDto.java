@@ -1,6 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.validation.OnAggregationCreateGroup;
 import com.epam.esm.validation.OnUpdateGroup;
 import com.fasterxml.jackson.annotation.JsonFormat;
