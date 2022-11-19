@@ -6,6 +6,7 @@ import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.validation.OnCreateGroup;
+import com.epam.esm.validation.OnSearchGroup;
 import com.epam.esm.validation.OnUpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -93,6 +95,23 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
         }
     }
 
+    @Validated(OnSearchGroup.class)
+    @GetMapping(value = "/with_tags", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(FOUND)
+    public CollectionModel<GiftCertificateDto> findByTagNames(@RequestParam("tags") List<String> tags) {
+        Set<GiftCertificateDto> certificates = certificateService.findByTagNames(tags);
+        if (!certificates.isEmpty()) {
+            List<Link> links = new ArrayList<>();
+            certificates.forEach(c -> {
+                Link selfLink = linkTo(methodOn(GiftCertificateController.class).findById(c.getId())).withSelfRel();
+                c.add(selfLink);
+                links.add(selfLink);
+            });
+            return CollectionModel.of(certificates, links);
+        } else {
+            throw new NoDataFoundException(CERTIFICATES, GiftCertificateDto.class);
+        }
+    }
 
     private void addLinksToCertificates(Set<GiftCertificateDto> certificates) {
         certificates.forEach(c -> {

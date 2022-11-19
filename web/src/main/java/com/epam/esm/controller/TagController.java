@@ -1,6 +1,5 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.BadRequestException;
@@ -12,7 +11,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -27,18 +25,30 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-
-
+/**
+ * The type Tag controller.
+ */
 @RestController
 @RequestMapping("/tags")
 public class TagController extends AbstractController<TagDto> {
     private final TagService tagService;
 
+    /**
+     * Instantiates a new Tag controller.
+     *
+     * @param tagService the tag service
+     */
     @Autowired
     public TagController(TagService tagService) {
         this.tagService = tagService;
     }
 
+    /**
+     * Create tag response entity.
+     *
+     * @param tagDto the tag dto
+     * @return the response entity
+     */
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<TagDto> createTag(@RequestBody TagDto tagDto) {
         TagDto newTag = tagService.create(tagDto);
@@ -48,6 +58,12 @@ public class TagController extends AbstractController<TagDto> {
         return new ResponseEntity<>(newTag, CREATED);
     }
 
+    /**
+     * Find all collection model.
+     *
+     * @param page the page
+     * @return the collection model
+     */
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<TagDto> findAll(@RequestParam("page") int page) {
@@ -64,6 +80,12 @@ public class TagController extends AbstractController<TagDto> {
     }
 
 
+    /**
+     * Find by id tag dto.
+     *
+     * @param id the id
+     * @return the tag dto
+     */
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public TagDto findById(@PathVariable("id") Long id) {
@@ -77,6 +99,11 @@ public class TagController extends AbstractController<TagDto> {
         }
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long id) {
@@ -86,11 +113,17 @@ public class TagController extends AbstractController<TagDto> {
         }
     }
 
+    /**
+     * Gets by name.
+     *
+     * @param name the name
+     * @return the by name
+     */
     @GetMapping(params = "name", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public TagDto getByName(@RequestParam @NotNull
-                                 @Pattern(regexp = "[\\w\\p{Blank}A-Z]{3,50}")
-                                        String name) {
+                            @Pattern(regexp = "[\\w\\p{Blank}A-Z]{3,50}")
+                                    String name) {
         Optional<TagDto> tag = tagService.findByName(name);
         if (tag.isPresent()) {
             Link link = linkTo(methodOn(TagController.class).getByName(name)).withSelfRel();
@@ -101,6 +134,11 @@ public class TagController extends AbstractController<TagDto> {
         }
     }
 
+    /**
+     * Find most used tag collection model.
+     *
+     * @return the collection model
+     */
     @GetMapping(value = "/most_used_tag", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<TagDto> findMostUsedTag() {
