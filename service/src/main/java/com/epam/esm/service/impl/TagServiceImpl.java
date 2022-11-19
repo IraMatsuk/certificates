@@ -17,6 +17,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The type Tag service.
+ */
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
@@ -25,6 +28,12 @@ public class TagServiceImpl implements TagService {
     private int maxResultAmount;
     private int lastPage;
 
+    /**
+     * Instantiates a new Tag service.
+     *
+     * @param tagRepository the tag repository
+     * @param tagMapper     the tag mapper
+     */
     @Autowired
     public TagServiceImpl(TagRepository tagRepository, @Qualifier("tagServiceMapper") TagMapper tagMapper) {
         this.tagRepository = tagRepository;

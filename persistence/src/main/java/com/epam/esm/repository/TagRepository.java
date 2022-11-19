@@ -10,10 +10,24 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * The interface Tag repository.
+ */
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
+    /**
+     * Find by name optional.
+     *
+     * @param name the name
+     * @return the optional
+     */
     Optional<Tag> findByName(String name);
 
+    /**
+     * Find the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return the set
+     */
     @Query(value = "SELECT t.tag_id, t.name FROM orders o " +
             "JOIN tag_gift_certificate tgc on o.gift_certificate_id = tgc.gift_certificate_id " +
             "JOIN tag t ON t.tag_id = tgc.tag_id " +
