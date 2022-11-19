@@ -32,7 +32,7 @@ public abstract class AbstractController<T> {
         List<Link> links = new ArrayList<>();
         Link link = linkTo(tagMethod).withSelfRel();
 
-        final int firstPage = 1;
+        final int firstPage = 0; // TODO
         int prevPage = page != firstPage ? page - 1 : page;
         int nextPage = page != lastPage ? page + 1 : page;
 

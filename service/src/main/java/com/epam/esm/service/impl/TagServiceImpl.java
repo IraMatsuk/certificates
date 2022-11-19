@@ -89,7 +89,15 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Set<TagDto> findMostUsedTag() {
+        return tagRepository.findMostUsedTag()
+                .stream()
+                .map(tagMapper::mapToDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public int getLastPage() {
-        return lastPage;
+        return lastPage - 1; // TODO
     }
 }

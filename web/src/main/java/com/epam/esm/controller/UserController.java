@@ -1,11 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
-import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.validation.OnCreateGroup;
 import org.springframework.beans.factory.annotation.Autowired;

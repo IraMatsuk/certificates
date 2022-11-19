@@ -82,6 +82,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getLastPage() {
-        return lastPage;
+        return lastPage - 1; // TODO
     }
 }

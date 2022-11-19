@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
@@ -11,6 +12,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.epam.esm.util.ParameterName.*;
+import static com.epam.esm.util.ParameterName.MOST_USED_TAG;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.HttpStatus.*;
@@ -95,6 +98,17 @@ public class TagController extends AbstractController<TagDto> {
             return tag.get();
         } else {
             throw new NoDataFoundException(NAME, name, TagDto.class);
+        }
+    }
+
+    @GetMapping(value = "/most_used_tag", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(FOUND)
+    public CollectionModel<TagDto> findMostUsedTag() {
+        Set<TagDto> tags = tagService.findMostUsedTag();
+        if (!tags.isEmpty()) {
+            return CollectionModel.of(tags);
+        } else {
+            throw new NoDataFoundException(MOST_USED_TAG, OrderDto.class);
         }
     }
 
