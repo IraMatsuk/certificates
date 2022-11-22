@@ -67,7 +67,7 @@ public class TagController extends AbstractController<TagDto> {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<TagDto> findAll(@RequestParam("page") int page) {
-        Set<TagDto> tags = tagService.findAll(page);
+        List<TagDto> tags = tagService.findAll(page);
         int lastPage = tagService.getLastPage();
         if (!tags.isEmpty()) {
             addLinksToTags(tags);
@@ -150,7 +150,7 @@ public class TagController extends AbstractController<TagDto> {
         }
     }
 
-    private void addLinksToTags(Set<TagDto> tags) {
+    private void addLinksToTags(List<TagDto> tags) {
         tags.forEach(t -> {
             Link selfLink = linkTo(methodOn(TagController.class).findById(t.getId())).withSelfRel();
             t.add(selfLink);

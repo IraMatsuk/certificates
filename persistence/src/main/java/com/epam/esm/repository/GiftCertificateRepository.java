@@ -8,10 +8,20 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The interface Gift certificate repository.
+ */
 @Repository
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long> {
 
-@Query(value = "SELECT * FROM gift_certificate " +
+    /**
+     * Find by tag names set.
+     *
+     * @param tagNames the tag names
+     * @param size     the size
+     * @return the certificate set founded by tag names
+     */
+    @Query(value = "SELECT * FROM gift_certificate " +
         "WHERE gift_certificate_id IN " +
         "(" +
         "SELECT tgc.gift_certificate_id " +

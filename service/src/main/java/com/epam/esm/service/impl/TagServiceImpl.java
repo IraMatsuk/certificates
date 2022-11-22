@@ -8,11 +8,13 @@ import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,13 +43,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Set<TagDto> findAll(int page) {
+    public List<TagDto> findAll(int page) {
         Pageable pageable = PageRequest.of(page, maxResultAmount);
-        Set<Tag> tagSet = tagRepository.findAll(pageable).toSet();
-        lastPage = tagRepository.findAll(pageable).getTotalPages();
+        Page currentPage = tagRepository.findAll(pageable);
+        List<Tag> tagSet = currentPage.toList();
+        lastPage = currentPage.getTotalPages();
         return tagSet.stream()
                 .map(tagMapper::mapToDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override

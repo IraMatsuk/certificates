@@ -47,7 +47,7 @@ public class OrderController extends AbstractController<OrderDto> {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<OrderDto> findAllOrders(@RequestParam("page") int page) {
-        Set<OrderDto> orders = orderService.findAll(page);
+        List<OrderDto> orders = orderService.findAll(page);
         int lastPage = orderService.getLastPage();
         if (!orders.isEmpty()) {
             addLinks(orders);
@@ -72,7 +72,7 @@ public class OrderController extends AbstractController<OrderDto> {
         }
     }
 
-    private void addLinks(Set<OrderDto> orders) {
+    private void addLinks(List<OrderDto> orders) {
         orders.forEach(c -> {
             Link selfLink = linkTo(methodOn(OrderController.class).findById(c.getId())).withSelfRel();
             c.add(selfLink);

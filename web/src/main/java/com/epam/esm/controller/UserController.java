@@ -46,7 +46,7 @@ public class UserController extends AbstractController<UserDto> {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<UserDto> findAllUsers(@RequestParam("page") int page) {
-        Set<UserDto> users = userService.findAll(page);
+        List<UserDto> users = userService.findAll(page);
         int lastPage = userService.getLastPage();
         if (!users.isEmpty()) {
             addLinks(users);
@@ -71,8 +71,7 @@ public class UserController extends AbstractController<UserDto> {
         }
     }
 
-
-    private void addLinks(Set<UserDto> users) {
+    private void addLinks(List<UserDto> users) {
         users.forEach(c -> {
             Link selfLink = linkTo(methodOn(UserController.class).findById(c.getId())).withSelfRel();
             c.add(selfLink);

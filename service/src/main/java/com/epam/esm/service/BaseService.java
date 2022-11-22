@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * The interface Base service.
@@ -15,7 +15,7 @@ public interface BaseService<T> {
      * @param page the page
      * @return the set
      */
-    Set<T> findAll(int page);
+    List<T> findAll(int page);
 
     /**
      * Find by id optional.

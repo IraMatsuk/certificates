@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -77,13 +78,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Set<OrderDto> findAll(int page) {
+    public List<OrderDto> findAll(int page) {
         Pageable pageable = PageRequest.of(page, maxResultAmount);
         Set<Order> orders = orderRepository.findAll(pageable).toSet();
         lastPage = orderRepository.findAll(pageable).getTotalPages();
         return orders.stream()
                 .map(orderMapper::mapToDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override

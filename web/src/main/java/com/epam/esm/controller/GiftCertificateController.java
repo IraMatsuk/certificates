@@ -40,7 +40,7 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public CollectionModel<GiftCertificateDto> findAllCertificates(@RequestParam("page") int page) {
-        Set<GiftCertificateDto> certificates = certificateService.findAll(page);
+        List<GiftCertificateDto> certificates = certificateService.findAll(page);
         int lastPage = certificateService.getLastPage();
         if (!certificates.isEmpty()) {
             addLinksToCertificates(certificates);
@@ -113,7 +113,23 @@ public class GiftCertificateController extends AbstractController<GiftCertificat
         }
     }
 
-    private void addLinksToCertificates(Set<GiftCertificateDto> certificates) {
+    @GetMapping("/sort")
+    public CollectionModel<GiftCertificateDto> sortCertificates(@RequestParam(value = "page") int page,
+                                                                @RequestParam(value = "sort") List<String> sortTypes) {
+        List<GiftCertificateDto> certificates = certificateService.sortCertificatesBySeveralParameters(page, sortTypes);
+        int lastPage = certificateService.getLastPage();
+        if (!certificates.isEmpty()) {
+            addLinksToCertificates(certificates);
+            CollectionModel<GiftCertificateDto> method = methodOn(GiftCertificateController.class)
+                    .sortCertificates(page, sortTypes);
+            List<Link> links = addPagesLinks(method, page, lastPage);
+            return CollectionModel.of(certificates, links);
+        } else {
+            throw new NoDataFoundException(certificates.toString(), GiftCertificateDto.class);
+        }
+    }
+
+    private void addLinksToCertificates(List<GiftCertificateDto> certificates) {
         certificates.forEach(c -> {
             Link selfLink = linkTo(methodOn(GiftCertificateController.class).findById(c.getId())).withSelfRel();
             c.add(selfLink);

@@ -10,19 +10,22 @@ import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
+    private static final String CREATED_DATE = "createDate";
+    private static final String DATE = "date";
+    private static final String NAME = "name";
+    private static final String DESC = "desc";
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagRepository tagRepository;
     private final GiftCertificateMapper giftCertificateMapper;
@@ -39,13 +42,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Set<GiftCertificateDto> findAll(int page) {
+    public List<GiftCertificateDto> findAll(int page) {
         Pageable pageable = PageRequest.of(page, maxResultAmount);
-        Set<GiftCertificate> giftCertificates = giftCertificateRepository.findAll(pageable).toSet();
+        List<GiftCertificate> giftCertificates = giftCertificateRepository.findAll(pageable).toList();
         lastPage = giftCertificateRepository.findAll(pageable).getTotalPages();
         return giftCertificates.stream()
                 .map(giftCertificateMapper::mapToDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -102,9 +105,33 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    private List<Sort.Order> createSortList(List<String> sortTypes) {
+        List<Sort.Order> orders = new ArrayList<>();
+        for (int i = 0; i < sortTypes.size();) {
+            Sort.Direction direction = sortTypes.get(i+1).equals(DESC) ? Sort.Direction.DESC : Sort.Direction.ASC;
+            String property = sortTypes.get(i).equals(DATE) ? CREATED_DATE : NAME;
+            orders.add(new Sort.Order(direction, property));
+            i+=2;
+        }
+        return orders;
+    }
+
+    @Override
+    public List<GiftCertificateDto> sortCertificatesBySeveralParameters(int page, List<String> sortTypes) {
+        List<Sort.Order> sortOrder = createSortList(sortTypes);
+
+        Pageable pageable = PageRequest.of(page, maxResultAmount, Sort.by(sortOrder));
+        Page currentPage = giftCertificateRepository.findAll(pageable);
+        List<GiftCertificate> giftCertificates = currentPage.toList();
+        lastPage = currentPage.getTotalPages();
+        return giftCertificates.stream()
+                .map(giftCertificateMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public int getLastPage() {
-        return lastPage;
+        return lastPage <= 0 ? 0 : lastPage - 1;
     }
 
     private void updateData(GiftCertificate giftCertificate, GiftCertificateDto certificateDto) {
