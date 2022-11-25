@@ -16,7 +16,7 @@ dependencies {
     implementation project(':persistence')
     implementation 'org.springframework.boot:spring-boot-starter-hateoas:2.7.5'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-    }
+}
 
 test {
     useJUnitPlatform()
