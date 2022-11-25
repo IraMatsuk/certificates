@@ -69,12 +69,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        boolean exists = orderRepository.existsById(id);
+        if (exists) {
+            orderRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int getLastPage() {
-        return lastPage;
+        return lastPage <= 0 ? 0 : lastPage - 1;
     }
 
     @Override
