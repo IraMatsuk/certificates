@@ -1,6 +1,6 @@
 INSERT INTO gift_certificate(name, description, price, duration, create_date, last_update_date)
-VALUES ('certificateOne', 'descriptionOne', 2100.50, 21, '2022-11-22 12:06:45', '2022-11-22 13:52:55'),
-       ('certificateOne', 'descriptionOne', 2100.50, 21, '2022-10-23 09:16:05', '2022-10-24 19:45:31');
+VALUES ('certificateOne', 'descriptionOne', 2100.50, 21, '2022-11-22 12:06:45', '2022-11-22 12:06:45'),
+       ('certificateTwo', 'descriptionTwo', 4100.90, 10, '2022-10-23 09:16:05', '2022-10-23 09:16:05');
 
 INSERT INTO tag(name) VALUES ('oneTag');
 INSERT INTO tag(name) VALUES ('twoTag');
