@@ -16,6 +16,16 @@ dependencies {
     implementation project(':persistence')
     implementation 'org.springframework.boot:spring-boot-starter-hateoas:2.7.5'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'
+    implementation 'junit:junit:4.12'
+    implementation 'com.h2database:h2:2.1.210'
+
+
+    //  testFixturesApi 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    //testFixturesApi 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 test {
