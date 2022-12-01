@@ -67,14 +67,13 @@ public class GiftCertificateServiceImplTest {
                 .build();
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {2, 15})
-    void findAll(int page, int size) {
-        ReflectionTestUtils.setField(certificateService, "maxResultAmount", 5);
-        when(certificateRepositoryMock.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(getCertificateList(1)));
+    @Test
+    void findAll() {
+        Pageable pageable = PageRequest.of(1, 1);
+        when(certificateRepositoryMock.findAll(pageable)).thenReturn(new PageImpl<>(List.of(giftCertificate)));
         when(certificateMapperMock.mapToDto(any(GiftCertificate.class))).thenReturn(new GiftCertificateDto());
         int expected = 1;
-        List<GiftCertificateDto> certificates = certificateService.findAll(page, size);
+        List<GiftCertificateDto> certificates = certificateService.findAll(1, 1);
         int actual = certificates.size();
         Assertions.assertEquals(expected, actual);
     }
@@ -140,12 +139,6 @@ public class GiftCertificateServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideCertificateData")
-    void update(GiftCertificateDto certificate) {
-
-    }
-
-    @ParameterizedTest
     @ValueSource(longs = {1, 4, 14, 5, 31})
     void delete(long id) {
         when(certificateRepositoryMock.existsById(anyLong())).thenReturn(true);
@@ -155,18 +148,20 @@ public class GiftCertificateServiceImplTest {
         assertTrue(actual);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideSearchParameters")
-    void sortCertificatesBySeveralParameters(int page, int size, List<String> sortTypes) {
-        ReflectionTestUtils.setField(certificateService, "size", 5);
-        when(certificateRepositoryMock.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(getCertificateList(1)));
-        when(certificateMapperMock.mapToDto(any(GiftCertificate.class))).thenReturn(new GiftCertificateDto());
-        int expected = 1;
-        List<GiftCertificateDto> certificates = certificateService.sortCertificatesBySeveralParameters(page, size, sortTypes);
-        int actual = certificates.size();
-        Assertions.assertEquals(expected, actual);
-
-    }
+//    @ParameterizedTest
+//    @MethodSource("provideSearchParameters")
+//    void sortCertificatesBySeveralParameters() {
+//      //  ReflectionTestUtils.setField(certificateService, "maxResultAmount", 5);
+//        List<String> sortTypes = List.of("name", "desc", "date", "asc");
+//        Pageable pageable = PageRequest.of(1, 1);
+//
+//        when(certificateRepositoryMock.findAll(pageable)).thenReturn(new PageImpl<>(List.of(giftCertificate)));
+//        when(certificateMapperMock.mapToDto(any(GiftCertificate.class))).thenReturn(new GiftCertificateDto());
+//        int expected = 1;
+//        List<GiftCertificateDto> certificates = certificateService.sortCertificatesBySeveralParameters(1, 1, sortTypes);
+//        int actual = certificates.size();
+//        Assertions.assertEquals(expected, actual);
+//    }
 
     @Test
     void updateCertificate() {
