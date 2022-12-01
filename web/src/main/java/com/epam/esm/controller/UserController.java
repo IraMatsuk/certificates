@@ -1,10 +1,12 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.UserDto;
+import com.epam.esm.dto.View;
 import com.epam.esm.exception.BadRequestException;
 import com.epam.esm.exception.NoDataFoundException;
 import com.epam.esm.service.UserService;
 import com.epam.esm.validation.OnCreateGroup;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -87,10 +89,31 @@ public class UserController extends AbstractController<UserDto> {
      */
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
+    @JsonView(View.UserWithoutOrders.class)
     public UserDto findById(@PathVariable("id") Long id) {
         Optional<UserDto> userDto = userService.findById(id);
         if (userDto.isPresent()) {
             Link link = linkTo(methodOn(UserController.class).findById(id)).withSelfRel();
+            userDto.get().add(link);
+            return userDto.get();
+        } else {
+            throw new NoDataFoundException(ID, id, UserDto.class);
+        }
+    }
+
+    /**
+     * Find by id with orders user dto.
+     *
+     * @param id the id
+     * @return the user dto
+     */
+    @GetMapping(value = "/{id}/orders", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(FOUND)
+    @JsonView(View.UserWithOrders.class)
+    public UserDto findByIdWithOrders(@PathVariable("id") Long id) {
+        Optional<UserDto> userDto = userService.findById(id);
+        if (userDto.isPresent()) {
+            Link link = linkTo(methodOn(UserController.class).findByIdWithOrders(id)).withSelfRel();
             userDto.get().add(link);
             return userDto.get();
         } else {

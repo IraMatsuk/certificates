@@ -24,12 +24,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private int lastPage;
 
-    /**
-     * Instantiates a new User service.
-     *
-     * @param userMapper     the user mapper
-     * @param userRepository the user repository
-     */
     @Autowired
     public UserServiceImpl(UserMapper userMapper, UserRepository userRepository) {
         this.userMapper = userMapper;
