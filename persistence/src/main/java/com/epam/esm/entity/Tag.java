@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * The type Tag.
+ */
 @Data
 @Entity
 @Table(name = "tag")

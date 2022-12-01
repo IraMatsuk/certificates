@@ -11,7 +11,6 @@ import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,16 +23,25 @@ import java.util.stream.Collectors;
 
 import static com.epam.esm.util.ParameterName.ID;
 
+/**
+ * The type Order service.
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final GiftCertificateRepository giftCertificateRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
-    @Value("5")
-    private int maxResultAmount;
     private int lastPage;
 
+    /**
+     * Instantiates a new Order service.
+     *
+     * @param orderRepository           the order repository
+     * @param giftCertificateRepository the gift certificate repository
+     * @param userRepository            the user repository
+     * @param orderMapper               the order mapper
+     */
     public OrderServiceImpl(OrderRepository orderRepository,
                             GiftCertificateRepository giftCertificateRepository,
                             UserRepository userRepository,
@@ -79,15 +87,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int getLastPage() {
-        return lastPage <= 0 ? 0 : lastPage - 1;
-    }
-
-    @Override
-    public List<OrderDto> findAll(int page) {
-        Pageable pageable = PageRequest.of(page, maxResultAmount);
-        Set<Order> orders = orderRepository.findAll(pageable).toSet();
-        lastPage = orderRepository.findAll(pageable).getTotalPages();
+    public List<OrderDto> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Set<Order> orders = orderRepository.findAll(pageable).toSet(); // TODO
+        lastPage = orderRepository.findAll(pageable).getTotalPages(); // TODO
         return orders.stream()
                 .map(orderMapper::mapToDto)
                 .collect(Collectors.toList());
@@ -102,5 +105,10 @@ public class OrderServiceImpl implements OrderService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public int getLastPage() {
+        return lastPage <= 0 ? 0 : lastPage - 1;
     }
 }

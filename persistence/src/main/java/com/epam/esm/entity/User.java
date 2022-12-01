@@ -8,6 +8,9 @@ import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * The type User.
+ */
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name = "users")
@@ -26,10 +29,18 @@ public class User {
     @ToString.Exclude
     private Set<Order> orders;
 
+    /**
+     * Instantiates a new User.
+     */
     public User() {
         orders = new LinkedHashSet<>();
     }
 
+    /**
+     * Instantiates a new User.
+     *
+     * @param id the id
+     */
     public User(long id) {
         this.id = id;
         orders = new LinkedHashSet<>();

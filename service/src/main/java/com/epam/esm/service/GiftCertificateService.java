@@ -26,12 +26,14 @@ public interface GiftCertificateService extends BaseService<GiftCertificateDto> 
      */
     Set<GiftCertificateDto> findByTagNames(List<String> tagNames);
 
+
     /**
-     * Sort certificates by several parameters set.
+     * Sort certificates by several parameters list.
      *
      * @param page      the page
+     * @param size      the size
      * @param sortTypes the sort types
-     * @return the set
+     * @return the list
      */
-    List<GiftCertificateDto> sortCertificatesBySeveralParameters(int page, List<String> sortTypes);
+    List<GiftCertificateDto> sortCertificatesBySeveralParameters(int page, int size, List<String> sortTypes);
 }

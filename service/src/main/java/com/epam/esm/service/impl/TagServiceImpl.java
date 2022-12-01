@@ -7,7 +7,6 @@ import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +25,6 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
-    @Value("5")
-    private int maxResultAmount;
     private int lastPage;
 
     /**
@@ -43,8 +40,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> findAll(int page) {
-        Pageable pageable = PageRequest.of(page, maxResultAmount);
+    public List<TagDto> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page currentPage = tagRepository.findAll(pageable);
         List<Tag> tagSet = currentPage.toList();
         lastPage = currentPage.getTotalPages();

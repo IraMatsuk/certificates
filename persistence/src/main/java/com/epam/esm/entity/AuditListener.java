@@ -8,6 +8,9 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
+/**
+ * The type Audit listener.
+ */
 class AuditListener {
     /**
      * The Logger.

@@ -62,16 +62,18 @@ public class TagController extends AbstractController<TagDto> {
      * Find all collection model.
      *
      * @param page the page
+     * @param size the size
      * @return the collection model
      */
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
-    public CollectionModel<TagDto> findAll(@RequestParam("page") int page) {
-        List<TagDto> tags = tagService.findAll(page);
+    public CollectionModel<TagDto> findAll(@RequestParam(value = "page") int page,
+                                           @RequestParam(value = "size", required = false) int size) {
+        List<TagDto> tags = tagService.findAll(page, size);
         int lastPage = tagService.getLastPage();
         if (!tags.isEmpty()) {
             addLinksToTags(tags);
-            CollectionModel<TagDto> method = methodOn(TagController.class).findAll(page);
+            CollectionModel<TagDto> method = methodOn(TagController.class).findAll(page, size);
             List<Link> links = addPagesLinks(method, page, lastPage);
             return CollectionModel.of(tags, links);
         } else {

@@ -9,13 +9,15 @@ import java.util.Optional;
  * @param <T> the type parameter
  */
 public interface BaseService<T> {
+
     /**
-     * Find all set.
+     * Find all list.
      *
      * @param page the page
-     * @return the set
+     * @param size the size
+     * @return the list
      */
-    List<T> findAll(int page);
+    List<T> findAll(int page, int size);
 
     /**
      * Find by id optional.

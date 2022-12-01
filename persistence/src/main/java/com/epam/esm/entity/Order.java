@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 
 import static com.epam.esm.entity.AuditListener.*;
 
+/**
+ * The type Order.
+ */
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name = "orders")
@@ -35,12 +38,18 @@ public class Order {
     @JoinColumn(name = "gift_certificate_id")
     private GiftCertificate certificate;
 
+    /**
+     * Instantiates a new Order.
+     */
     @Tolerate
     public Order() {
         user = new User();
         certificate = new GiftCertificate();
     }
 
+    /**
+     * On pre persist.
+     */
     @PrePersist()
     public void onPrePersist() {
         createDate = auditDateTime;

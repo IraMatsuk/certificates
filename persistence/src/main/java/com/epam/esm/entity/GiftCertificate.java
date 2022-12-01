@@ -13,6 +13,9 @@ import java.util.Set;
 
 import static com.epam.esm.entity.AuditListener.*;
 
+/**
+ * The type Gift certificate.
+ */
 @Entity
 @Table(name = "gift_certificate")
 @Data
@@ -47,12 +50,20 @@ public class GiftCertificate implements Serializable {
         tags = new LinkedHashSet<>();
     }
 
+    /**
+     * Instantiates a new Gift certificate.
+     *
+     * @param id the id
+     */
     @Tolerate
     public GiftCertificate(long id) {
         this.id = id;
         tags = new LinkedHashSet<>();
     }
 
+    /**
+     * On pre persist.
+     */
     @PrePersist
     public void onPrePersist() {
         audit(this, INSERT_OPERATION);

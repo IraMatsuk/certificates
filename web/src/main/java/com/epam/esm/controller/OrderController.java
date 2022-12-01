@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.epam.esm.util.ParameterName.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -24,16 +23,30 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * The type Order controller.
+ */
 @RestController
 @RequestMapping("/orders")
 public class OrderController extends AbstractController<OrderDto> {
     private final OrderService orderService;
 
+    /**
+     * Instantiates a new Order controller.
+     *
+     * @param orderService the order service
+     */
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
+    /**
+     * Create order response entity.
+     *
+     * @param orderDto the order dto
+     * @return the response entity
+     */
     @Validated(OnCreateGroup.class)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
@@ -44,14 +57,22 @@ public class OrderController extends AbstractController<OrderDto> {
         return new ResponseEntity<>(userOrder, CREATED);
     }
 
+    /**
+     * Find all orders collection model.
+     *
+     * @param page the page
+     * @param size the size
+     * @return the collection model
+     */
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
-    public CollectionModel<OrderDto> findAllOrders(@RequestParam("page") int page) {
-        List<OrderDto> orders = orderService.findAll(page);
+    public CollectionModel<OrderDto> findAllOrders(@RequestParam(value = "page") int page,
+                                                   @RequestParam(value = "size", required = false) int size) {
+        List<OrderDto> orders = orderService.findAll(page, size);
         int lastPage = orderService.getLastPage();
         if (!orders.isEmpty()) {
             addLinks(orders);
-            CollectionModel<OrderDto> method = methodOn(OrderController.class).findAllOrders(page);
+            CollectionModel<OrderDto> method = methodOn(OrderController.class).findAllOrders(page, size);
             List<Link> links = addPagesLinks(method, page, lastPage);
             return CollectionModel.of(orders, links);
         } else {
@@ -59,6 +80,12 @@ public class OrderController extends AbstractController<OrderDto> {
         }
     }
 
+    /**
+     * Find by id order dto.
+     *
+     * @param id the id
+     * @return the order dto
+     */
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(FOUND)
     public OrderDto findById(@PathVariable("id") Long id) {

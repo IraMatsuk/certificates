@@ -6,7 +6,6 @@ import com.epam.esm.mapper.impl.UserMapper;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,14 +15,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The type User service.
+ */
 @Service
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    @Value("5")
-    private int maxResultAmount;
     private int lastPage;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param userMapper     the user mapper
+     * @param userRepository the user repository
+     */
     @Autowired
     public UserServiceImpl(UserMapper userMapper, UserRepository userRepository) {
         this.userMapper = userMapper;
@@ -55,8 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll(int page) {
-        Pageable pageable = PageRequest.of(page, maxResultAmount);
+    public List<UserDto> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         List<User> users = userRepository.findAll(pageable).toList();
         lastPage = userRepository.findAll(pageable).getTotalPages();
         return users.stream()
