@@ -18,6 +18,9 @@ import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * The type Order dto.
+ */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
