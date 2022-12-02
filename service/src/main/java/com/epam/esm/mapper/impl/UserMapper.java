@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("userServiceMapper")
@@ -29,9 +29,9 @@ public class UserMapper implements Mapper<User, UserDto> {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUserName());
-        Set<OrderDto> orders = user.getOrders().stream()
+        List<OrderDto> orders = user.getOrders().stream()
                 .map(orderMapper::mapToDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         userDto.setOrders(orders);
         return userDto;
     }

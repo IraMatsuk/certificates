@@ -12,8 +12,8 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -29,14 +29,18 @@ public class UserDto extends RepresentationModel<UserDto> {
     private String username;
 
     @JsonView(View.UserWithOrders.class)
-    private Set<@Valid OrderDto> orders;
+    private List<@Valid OrderDto> orders;
 
     /**
      * Instantiates a new User dto.
      */
     @Tolerate
     public UserDto() {
-        orders = new LinkedHashSet<>();
+        orders = new ArrayList<>();
+    }
+
+    public List<OrderDto> getOrders() {
+        return orders;
     }
 }
 
