@@ -101,26 +101,6 @@ public class UserController extends AbstractController<UserDto> {
         }
     }
 
-    /**
-     * Find by id with orders user dto.
-     *
-     * @param id the id
-     * @return the user dto
-     */
-    @GetMapping(value = "/{id}/orders", produces = APPLICATION_JSON_VALUE)
-    @ResponseStatus(FOUND)
-    @JsonView(View.UserWithOrders.class)
-    public UserDto findByIdWithOrders(@PathVariable("id") Long id) {
-        Optional<UserDto> userDto = userService.findById(id);
-        if (userDto.isPresent()) {
-            Link link = linkTo(methodOn(UserController.class).findByIdWithOrders(id)).withSelfRel();
-            userDto.get().add(link);
-            return userDto.get();
-        } else {
-            throw new NoDataFoundException(ID, id, UserDto.class);
-        }
-    }
-
     private void addLinks(List<UserDto> users) {
         users.forEach(c -> {
             Link selfLink = linkTo(methodOn(UserController.class).findById(c.getId())).withSelfRel();
