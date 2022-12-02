@@ -9,6 +9,9 @@ import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.Pattern;
 
+/**
+ * The type Tag dto.
+ */
 @Data
 @Builder
 @Relation(collectionRelation = "tags")

@@ -15,6 +15,9 @@ import javax.validation.ConstraintViolationException;
 
 import static org.springframework.http.HttpStatus.*;
 
+/**
+ * The type Base exception handler.
+ */
 @RestControllerAdvice
 public class BaseExceptionHandler {
     private static final String NOT_FOUND_MESSAGE = "Requested resource not found (";

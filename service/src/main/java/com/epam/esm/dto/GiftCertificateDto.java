@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * The type Gift certificate dto.
+ */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
