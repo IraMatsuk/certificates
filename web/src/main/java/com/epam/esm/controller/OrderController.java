@@ -99,6 +99,31 @@ public class OrderController extends AbstractController<OrderDto> {
         }
     }
 
+    /**
+     * Find user orders collection model.
+     *
+     * @param userId the user id
+     * @param page   the page
+     * @param size   the size
+     * @return the collection model
+     */
+    @GetMapping(value = "user/{id}", produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(FOUND)
+    public CollectionModel<OrderDto> findUserOrders(@PathVariable("id") Long userId,
+                                         @RequestParam(value = "page") int page,
+                                         @RequestParam(value = "size", required = false) int size) {
+        List<OrderDto> orders = orderService.findOrdersByUserId(userId, page, size);
+        int lastPage = orderService.getLastPage();
+        if (!orders.isEmpty()) {
+            addLinks(orders);
+            CollectionModel<OrderDto> method = methodOn(OrderController.class).findUserOrders(userId, page, size);
+            List<Link> links = addPagesLinks(method, page, lastPage);
+            return CollectionModel.of(orders, links);
+        } else {
+            throw new NoDataFoundException(ID, userId, OrderDto.class);
+        }
+    }
+
     private void addLinks(List<OrderDto> orders) {
         orders.forEach(c -> {
             Link selfLink = linkTo(methodOn(OrderController.class).findById(c.getId())).withSelfRel();

@@ -1,6 +1,8 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +12,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    /**
+     * Find by user id page.
+     *
+     * @param userId   the user id
+     * @param pageable the pageable
+     * @return the page
+     */
+    Page<Order> findByUserId(Long userId, Pageable pageable);
 }

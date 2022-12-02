@@ -11,6 +11,7 @@ import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -89,8 +90,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Set<Order> orders = orderRepository.findAll(pageable).toSet(); // TODO
-        lastPage = orderRepository.findAll(pageable).getTotalPages(); // TODO
+        Page currentPage = orderRepository.findAll(pageable);
+        Set<Order> orders = currentPage.toSet();
+        lastPage = currentPage.getTotalPages();
         return orders.stream()
                 .map(orderMapper::mapToDto)
                 .collect(Collectors.toList());
@@ -108,7 +110,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderDto> findOrdersByUserId(Long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page currentPage = orderRepository.findByUserId(id, pageable);
+        Set<Order> orders = currentPage.toSet();
+        lastPage = currentPage.getTotalPages();
+        return orders.stream()
+                .map(orderMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public int getLastPage() {
         return lastPage <= 0 ? 0 : lastPage - 1;
     }
+
 }
