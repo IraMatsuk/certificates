@@ -19,6 +19,10 @@ subprojects {
         mavenCentral()
     }
 
+    bootJar {
+        enabled = false
+    }
+
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-actuator:2.7.5'
         implementation 'org.springframework.boot:spring-boot-devtools:2.7.5'
@@ -36,5 +40,6 @@ repositories {
     mavenCentral()
 }
 
-
-
+bootJar {
+   enabled = false
+}
